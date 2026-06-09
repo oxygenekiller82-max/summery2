@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopFlow - Become a Seller</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script th:src="@{/js/auth-handler.js}"></script>
+    <style>
+        :root{
+            --bg-indigo: rgb(157, 210, 208);
+            --card-lavender: #FDFCF0;
+            --accent-coral: #EFA6AD;
+            --text-navy: #1A1A1A;
+            --white-highlight: rgba(255, 255, 255, 0.9);
+        }
+
+        body{
+            background: var(--bg-indigo) url("/img/motif.png") repeat fixed;
+            color: var(--text-navy);
+            font-family: 'Segoe UI',sans-serif;
+        }
+
+        .tactile-navbar{
+            background-color: rgba(157, 210, 208, 0.8);
+            border-bottom: 1.5px solid var(--white-highlight);
+            padding-top: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link:hover{
+            color:var(--accent-coral) !important;
+            transition: color 0.4s ease;
+        }
+
+        .tactile-card{
+            background-color: var(--card-lavender);
+            border:none;
+            border-radius: 16px;
+            box-shadow:
+                inset 2px 2px 4px var(--white-highlight),
+                8px 12px 24px rgba(22,29,76,0.4);
+        }
+
+        .tactile-input{
+            background-color: #E2E5F2;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-navy);
+            box-shadow: inset 3px 3px 6px rgba(22,29,76,0.1),
+                        inset -2px -2px 4px var(--white-highlight);
+            padding: 0.75rem 1rem;
+        }
+
+        .tactile-input:focus {
+            outline: none;
+            box-shadow: inset 3px 3px 6px rgba(22,29,76,0.1),
+                        inset -2px -2px 4px var(--white-highlight),
+                        0 0 0 3px rgba(239, 166, 173, 0.2);
+            background-color: #D8DBE8;
+        }
+
+        .tactile-btn {
+            background-color: var(--accent-coral);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 2px 4px 8px rgba(239, 166, 173, 0.4),
+                  inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+            transition: all 0.8s ease;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
+
+        .tactile-btn:hover {
+            background-color: #f1b3b9;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .container-xl {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .form-section {
+            margin-top: 2rem;
+        }
+
+        .form-section h4 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-navy);
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(239, 166, 173, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-navy);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .error-message {
+            background-color: rgba(239, 166, 173, 0.2);
+            color: var(--text-navy);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-coral);
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .success-message {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--text-navy);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-navy);
+            border: 2px solid var(--accent-coral);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-coral);
+            color: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .info-text {
+            font-size: 0.9rem;
+            color: rgba(26, 26, 26, 0.6);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg tactile-navbar sticky-top">
+        <div class="container-lg">
+            <a class="navbar-brand" href="/">🛍️ ShopFlow</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/catalog">Catalog</a>
+                    </li>
+                    <li class="nav-item" id="authNav">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container-xl my-5">
+        
+        <div class="tactile-card p-5">
+            <h2 class="mb-4 fw-bold text-center">Become a Seller</h2>
+            <p class="text-center text-muted mb-4">Start your online shop today and reach thousands of customers</p>
+
+            <div class="error-message" id="errorMsg"></div>
+            <div class="success-message" id="successMsg"></div>
+
+            <!-- ACCOUNT SECTION -->
+            <div class="form-section">
+                <h4>Account Information</h4>
+                
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control tactile-input" placeholder="your@email.com" disabled>
+                    <p class="info-text">Use your registered email</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control tactile-input" placeholder="Your password">
+                    <p class="info-text">Enter your account password to verify</p>
+                </div>
+            </div>
+
+            <!-- SHOP SECTION -->
+            <div class="form-section">
+                <h4>Shop Information</h4>
+                
+                <div class="form-group">
+                    <label class="form-label">Shop Name *</label>
+                    <input type="text" id="shopName" class="form-control tactile-input" placeholder="e.g. Tech Paradise">
+                    <p class="info-text">This is your store name that customers will see</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Shop Description</label>
+                    <textarea id="shopDescription" class="form-control tactile-input" placeholder="Tell customers about your shop..."></textarea>
+                    <p class="info-text">Optional: Describe your store and what you sell</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Shop Logo URL</label>
+                    <input type="url" id="shopLogo" class="form-control tactile-input" placeholder="https://example.com/logo.png">
+                    <p class="info-text">URL to your shop's logo image</p>
+                </div>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="btn-group">
+                <button class="tactile-btn flex-grow-1" onclick="registerSeller()">
+                    Create Shop
+                </button>
+                <button class="btn-secondary flex-grow-1" onclick="window.location.href='/'">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check if user is logged in
+		document.addEventListener('DOMContentLoaded', async () => {
+		    const token = localStorage.getItem('access_token');
+		    
+		    if (!token) {
+		        window.location.href = '/login?redirect=/become-seller';
+		        return;
+		    }
+		});
+
+		function showError(message) {
+		    const errorMsg = document.getElementById('errorMsg');
+		    errorMsg.textContent = message;
+		    errorMsg.style.display = 'block';
+		    document.getElementById('successMsg').style.display = 'none';
+		}
+
+		function showSuccess(message) {
+		    const successMsg = document.getElementById('successMsg');
+		    successMsg.textContent = message;
+		    successMsg.style.display = 'block';
+		    document.getElementById('errorMsg').style.display = 'none';
+		}
+
+		async function registerSeller() {
+		    const shopName = document.getElementById('shopName').value.trim();
+		    const shopDescription = document.getElementById('shopDescription').value.trim();
+		    const shopLogo = document.getElementById('shopLogo').value.trim();
+
+		    if (!shopName) {
+		        showError('Shop name is required');
+		        return;
+		    }
+
+		    const payload = {
+		        nomBoutique: shopName,
+		        description: shopDescription || 'Welcome to my shop!',
+		        logo: shopLogo || null
+		    };
+
+		    const btn = event.target;
+		    btn.disabled = true;
+		    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating shop...';
+
+		    try {
+		        const res = await authorizedFetch('/api/auth/sellers', {
+		            method: 'POST',
+		            body: JSON.stringify(payload)
+		        });
+
+		        if (res.ok) {
+		            showSuccess(' Shop created! Redirecting to dashboard...');
+		            setTimeout(() => {
+		                window.location.href = '/post-product';
+		            }, 1500);
+		        } else {
+		            const error = await res.json().catch(() => ({}));
+		            showError(error.message || 'Failed to create shop. Please try again.');
+		            btn.disabled = false;
+		            btn.innerHTML = 'Create Shop';
+		        }
+		    } catch (error) {
+		        console.error('Error:', error);
+		        showError('Error creating shop.');
+		        btn.disabled = false;
+		        btn.innerHTML = 'Create Shop';
+		    }
+		}
+
+		// AUTHORIZED FETCH (with JWT)
+		async function authorizedFetch(url, options = {}) {
+		    const token = localStorage.getItem('access_token');
+		    const headers = {
+		        'Content-Type': 'application/json',
+		        ...(options.headers || {})
+		    };
+
+		    if (token) {
+		        headers['Authorization'] = `Bearer ${token}`;
+		    }
+
+		    return fetch(url, {
+		        ...options,
+		        headers
+		    });
+		}
+    </script>
+
+</body>
+
+</html>

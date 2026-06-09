@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopFlow - Your Online Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script th:src="@{/js/auth-handler.js}"></script>
+    <style>
+        :root{
+            --bg-indigo: rgb(157, 210, 208);
+            --card-lavender: #FDFCF0;
+            --accent-coral: #EFA6AD;
+            --text-navy: #1A1A1A;
+            --white-highlight: rgba(255, 255, 255, 0.9);
+        }
+
+        body{
+            background: var(--bg-indigo) url("/img/motif.png") repeat fixed;
+            color: var(--text-navy);
+            font-family: 'Segoe UI',sans-serif;
+        }
+
+        .row-stretch{ min-height: 85vh; }
+        .catalog-row{ min-height: 85vh; }
+        .catalog-row > aside, .catalog-row > main { display: flex; flex-direction: column; }
+
+        .tactile-navbar{
+            background-color: rgba(157, 210, 208, 0.8);
+            border-bottom: 1.5px solid var(--white-highlight);
+            padding-top: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link:hover{
+            color:var(--accent-coral) !important;
+            transition: color 0.4s ease;
+        }
+
+        .tactile-card{
+            background-color: var(--card-lavender);
+            border:none;
+            border-radius: 16px;
+            box-shadow:
+                inset 2px 2px 4px var(--white-highlight),
+                8px 12px 24px rgba(22,29,76,0.4);
+        }
+
+        .tactile-input{
+            background-color: #E2E5F2;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-navy);
+            box-shadow: inset 3px 3px 6px rgba(22,29,76,0.1),
+                        inset -2px -2px 4px var(--white-highlight);
+            padding: 0.75rem 1rem;
+        }
+
+        .tactile-btn {
+            background-color: var(--accent-coral);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 2px 4px 8px rgba(239, 166, 173, 0.4),
+                  inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+            transition: all 0.8s ease;
+        }
+
+        .tactile-btn:hover {
+            background-color: #f1b3b9;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .accent-link{
+            color: var(--accent-coral);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .accent-link:hover {
+            color: var(--text-navy);
+            text-decoration: underline;
+        }
+
+        .container-xl {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background: rgba(157, 210, 208, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img { width: 100%; height: 100%; object-fit: cover; }
+        .product-content { padding: 1rem; }
+        .product-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .product-price { font-weight: 700; color: var(--accent-coral); margin-bottom: 0.75rem; }
+
+        .category-scroll {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+
+        .category-chip {
+            background-color: #E2E5F2;
+            border: none;
+            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            white-space: nowrap;
+            cursor: pointer;
+            box-shadow: inset 1px 1px 2px var(--white-highlight),
+                        2px 4px 8px rgba(22,29,76,0.15);
+            color: var(--text-navy);
+            flex-shrink: 0;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .category-chip:hover { transform: translateY(-2px); }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(239, 166, 173, 0.15);
+        }
+
+        .section-header h2 { font-size: 1.4rem; font-weight: 700; margin: 0; }
+
+        .promo-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-coral);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .hero-banner {
+            background-color: var(--card-lavender);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+            text-align: center;
+            box-shadow: inset 2px 2px 4px var(--white-highlight),
+                        8px 12px 24px rgba(22,29,76,0.4);
+        }
+
+        .hero-banner h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .hero-banner p { font-size: 1rem; color: rgba(26, 26, 26, 0.7); margin-bottom: 1.5rem; }
+
+        .search-container { display: flex; gap: 0.5rem; max-width: 500px; margin: 0 auto; }
+
+        .search-input {
+            flex: 1;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            background-color: white;
+            color: var(--text-navy);
+            font-size: 1rem;
+            box-shadow: inset 2px 2px 4px rgba(22, 29, 76, 0.1);
+        }
+
+        .search-input::placeholder { color: rgba(26, 26, 26, 0.5); }
+        .search-input:focus {
+            outline: none;
+            box-shadow: inset 2px 2px 4px rgba(22, 29, 76, 0.1), 0 0 0 3px rgba(239, 166, 173, 0.2);
+        }
+
+        .search-btn {
+            background-color: var(--accent-coral);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.9rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 2px 4px 8px rgba(239, 166, 173, 0.3);
+        }
+
+        .search-btn:hover { background-color: #f1b3b9; transform: translateY(-2px); }
+
+        .cart-badge {
+            background-color: var(--accent-coral);
+            color: white;
+            border-radius: 50%;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: -0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg tactile-navbar sticky-top">
+        <div class="container-lg">
+            <a class="navbar-brand" href="/">🛍️ ShopFlow</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/catalog">Catalog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/become-seller">Become a Seller</a></li>
+					
+                    <li class="nav-item" id="authNav"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">
+                            🛒 Cart <span class="cart-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-xl">
+
+        <!-- HERO big banner search-->
+        <div class="hero-banner">
+            <h1>Welcome to ShopFlow</h1>
+            <p>Discover amazing products from sellers around the world</p>
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search products..." onkeypress="handleSearchKeypress(event)">
+                <button class="search-btn" onclick="handleSearch()">Search</button>
+            </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="tactile-card p-4 my-4">
+            <div class="section-header">
+                <h2>Browse by Category</h2>
+            </div>
+            <div class="category-scroll" id="categoryScroll">
+                <div style="color: rgba(26,26,26,0.4)">Loading...</div>
+            </div>
+        </div>
+
+        <!-- FEATURED PRODUCTS -->
+        <div class="tactile-card p-4 my-4">
+            <div class="section-header">
+                <h2>Featured Products</h2>
+                <a href="/catalog" class="accent-link">View All →</a>
+            </div>
+            <div class="product-grid" id="featuredGrid">
+                <div style="color: rgba(26,26,26,0.4)">Loading...</div>
+            </div>
+        </div>
+
+        <!-- PROMO PRODUCTS -->
+        <div class="tactile-card p-4 my-4">
+            <div class="section-header">
+                <h2>On Promotion</h2>
+                <a href="/catalog?promo=true" class="accent-link">View All →</a>
+            </div>
+            <div class="product-grid" id="promoGrid">
+                <div style="color: rgba(26,26,26,0.4)">Loading...</div>
+            </div>
+        </div>
+
+        <div style="height: 2rem;"></div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('access_token');
+            const authNav = document.getElementById('authNav');
+            //if (token) authNav.innerHTML = '<a class="nav-link" href="/dashboard">Dashboard</a>';
+            
+            updateCartCount();
+            await loadCategories();
+            await loadFeaturedProducts();
+            await loadPromoProducts();
+        });
+
+        async function updateCartCount() {
+            const token = localStorage.getItem('access_token');
+            if (!token) { document.getElementById('cartCount').textContent = '0'; return; }
+            try {
+                const res = await authorizedFetch('/api/cart');
+                const cart = await res.json();
+                document.getElementById('cartCount').textContent = cart.items ? cart.items.length : 0;
+            } catch (error) { console.error('Error loading cart:', error); }
+        }
+
+        async function loadCategories() {
+            try {
+                const res = await fetch('/api/categories');
+                const categories = await res.json();
+                const scroll = document.getElementById('categoryScroll');
+                scroll.innerHTML = '';
+                if (!Array.isArray(categories) || categories.length === 0) {
+                    scroll.innerHTML = '<p class="text-muted">No categories available</p>';
+                    return;
+                }
+                categories.forEach(cat => {
+                    const chip = document.createElement('button');
+                    chip.className = 'category-chip';
+                    chip.textContent = cat.nom || 'Unnamed';
+                    chip.onclick = () => window.location.href = `/catalog?category=${cat.id}`;
+                    scroll.appendChild(chip);
+                });
+            } catch (error) { console.error('Error loading categories:', error); }
+        }
+
+        async function loadFeaturedProducts() {
+            try {
+                const res = await fetch('/api/products/top-selling?size=8');
+                const data = await res.json();
+                renderProducts(data.content || data, 'featuredGrid');
+            } catch (error) { console.error('Error loading featured products:', error); }
+        }
+
+        async function loadPromoProducts() {
+            try {
+                const res = await fetch('/api/products?promo=true&size=8');
+                const data = await res.json();
+                renderProducts(data.content || data, 'promoGrid');
+            } catch (error) { console.error('Error loading promo products:', error); }
+        }
+
+        function renderProducts(products, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            if (!products || products.length === 0) {
+                container.innerHTML = '<p class="text-muted">No products found</p>';
+                return;
+            }
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'tactile-card';
+                card.style.cursor = 'pointer';
+                card.onclick = () => window.location.href = `/product/${product.id}`;
+                const hasPromo = product.prixPromo && product.prixPromo < product.prix;
+                card.innerHTML = `
+                    <div class="product-image">
+                        ${product.images && product.images ? `<img src="${product.images}" alt="${product.nom}">` : '📷'}
+                        ${hasPromo ? `<div class="promo-label">Sale</div>` : ''}
+                    </div>
+                    <div class="product-content">
+                        <div class="product-name">${product.nom}</div>
+                        <div class="product-price">${(hasPromo ? product.prixPromo : product.prix).toFixed(2)} DT</div>
+                        <button class="tactile-btn w-100 mt-2" onclick="event.stopPropagation(); addToCart(${product.id})">Add to Cart</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function addToCart(productId) {
+            const token = localStorage.getItem('access_token');
+            if (!token) { window.location.href = '/login'; return; }
+            try {
+                const res = await authorizedFetch('/api/cart/items', {
+                    method: 'POST',
+                    body: JSON.stringify({ productId: productId, quantity: 1 })
+                });
+                if (res.ok) { updateCartCount(); alert('✓ Added to cart!'); }
+                else { alert('Failed to add to cart'); }
+            } catch (error) { console.error('Error adding to cart:', error); }
+        }
+
+        async function authorizedFetch(url, options = {}) {
+            const token = localStorage.getItem('access_token');
+            const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            return fetch(url, { ...options, headers });
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) window.location.href = `/catalog?q=${encodeURIComponent(query)}`;
+        }
+
+        function handleSearchKeypress(event) { if (event.key === 'Enter') handleSearch(); }
+    </script>
+</body>
+</html>

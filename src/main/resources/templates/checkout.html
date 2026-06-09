@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShopFlow - Checkout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	
+	<script th:src="@{/js/auth-handler.js}"></script>
+    <style>
+        :root{
+            --bg-indigo: rgb(157, 210, 208);
+            --card-lavender: #FDFCF0;
+            --accent-coral: #EFA6AD;
+            --text-navy: #1A1A1A;
+            --white-highlight: rgba(255, 255, 255, 0.9);
+        }
+
+        body{
+            background: var(--bg-indigo) url("/img/motif.png") repeat fixed;
+            color: var(--text-navy);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* CARDS */
+        .tactile-card{
+            background-color: var(--card-lavender);
+            border: none;
+            border-radius: 16px;
+            box-shadow: inset 2px 2px 4px var(--white-highlight),
+                        8px 12px 24px rgba(22, 29, 76, 0.4);
+        }
+
+        /* Form inputs */
+        .tactile-input{
+            background-color: #E2E5F2;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-navy);
+            box-shadow: inset 3px 3px 6px rgba(22, 29, 76, 0.1),
+                        inset -2px -2px 4px var(--white-highlight);
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .tactile-input:focus {
+            background-color: #D8DBE8;
+            color: var(--text-navy);
+            box-shadow: inset 3px 3px 6px rgba(22, 29, 76, 0.15),
+                        inset -2px -2px 4px var(--white-highlight),
+                        0 0 0 3px rgba(239, 166, 173, 0.2);
+            outline: none;
+        }
+
+        /* Button design */
+        .tactile-btn {
+            background-color: var(--accent-coral);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 2px 4px 8px rgba(239, 166, 173, 0.4),
+                        inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .tactile-btn:hover {
+            background-color: #f1b3b9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 2px 6px 12px rgba(239, 166, 173, 0.5),
+                        inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+        }
+
+        .tactile-btn:active {
+            transform: translateY(0);
+            box-shadow: 2px 2px 4px rgba(239, 166, 173, 0.3),
+                        inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Secondary button variant */
+        .tactile-btn-outline {
+            background-color: transparent;
+            color: var(--text-navy);
+            border: 2px solid var(--accent-coral);
+            box-shadow: 2px 4px 8px rgba(22, 29, 76, 0.1);
+        }
+
+        .tactile-btn-outline:hover {
+            background-color: var(--accent-coral);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Error message */
+        #orderErrorMsg {
+            background-color: rgba(239, 166, 173, 0.25);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-coral);
+            color: var(--text-navy);
+        }
+
+        /* Address select box */
+        .address-box {
+            background-color: #E2E5F2;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-navy);
+            box-shadow: inset 3px 3px 6px rgba(22, 29, 76, 0.1),
+                        inset -2px -2px 4px var(--white-highlight);
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .address-box:focus {
+            background-color: #D8DBE8;
+            box-shadow: inset 3px 3px 6px rgba(22, 29, 76, 0.15),
+                        inset -2px -2px 4px var(--white-highlight),
+                        0 0 0 3px rgba(239, 166, 173, 0.2);
+            outline: none;
+        }
+
+        /* New address form */
+        #newAddressForm {
+            background-color: var(--white-highlight);
+            border: 2px solid rgba(239, 166, 173, 0.3);
+            border-radius: 12px;
+            box-shadow: inset 1px 1px 2px var(--white-highlight),
+                        0 4px 8px rgba(22, 29, 76, 0.1);
+        }
+
+        /* Headings */
+        h2, h5, h6 {
+            color: var(--text-navy);
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Summary section styling */
+        .sticky-top {
+            background-color: var(--card-lavender);
+        }
+
+        /* Text adjustments */
+        .text-muted {
+            color: rgba(26, 26, 26, 0.6) !important;
+        }
+
+        .text-success {
+            color: var(--accent-coral) !important;
+        }
+
+        #checkoutTotalTTC {
+            color: var(--accent-coral);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991px) {
+            .sticky-top {
+                position: relative !important;
+                top: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div class="container my-5">
+    <h2 class="mb-4 fw-bold">Checkout</h2>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
+            <div class="tactile-card p-4 mb-4">
+                <h5 class="mb-3">Shipping Address</h5>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Select an address</label>
+                    <select id="addressSelect" class="form-select address-box">
+                        <option value="">Loading addresses..</option>
+                        </select>
+                </div>
+
+                <button class="btn tactile-btn-outline btn-sm mb-3" onclick="toggleNewAddressForm()">
+                    + Add New Address
+                </button>
+                
+                <!--form for add new address-->
+
+                <div id="newAddressForm" class="d-none p-3">
+                    <h6 class="mb-3">New Delivery Address</h6>
+
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <input type="text" id="newRue" class="form-control tactile-input" placeholder="Street Address">
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="text" id="newVille" class="form-control tactile-input" placeholder="City">
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="text" id="newCodePostal" class="form-control tactile-input" placeholder="Zip Code 0000">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input type="text" id="newPays" class="form-control tactile-input" value="Tunisie" placeholder="Pays">
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <button class="btn tactile-btn w-100" onclick="saveNewAddress()">Save Address</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="tactile-card p-4 sticky-top" style="top: 20px;">
+                <h5 class="mb-4">Order Summary</h5>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Subtotal</span>
+                    <span id="checkoutSubtotal">0.00 DT</span>
+                </div>
+                
+                <div id="checkoutDiscountRow" class="d-flex justify-content-between mb-2 d-none text-success">
+                    <span>Discount</span>
+                    <span id="checkoutDiscount">-0.00 DT</span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                    <span class="text-muted">Shipping Fee</span>
+                    <span>7.00 DT</span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-4">
+                    <h5 class="fw-bold">Total (TTC)</h5>
+                    <h5 class="fw-bold" id="checkoutTotalTTC">0.00 DT</h5>
+                </div>
+
+                <button id="placeOrderBtn" class="btn tactile-btn w-100 shadow-sm" onclick="placeOrder()">
+                    Confirm & Place Order
+                </button>
+                <div id="orderErrorMsg" class="text-danger mt-2 small d-none"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+	if (!localStorage.getItem('access_token')) {
+				    window.location.href = '/login';
+	}
+				
+    // need adresses  + cart summary 
+    document.addEventListener("DOMContentLoaded", async () => {
+        await fetchAddresses();
+        await fetchCartSummary();
+    });
+
+    // --- ADDRESS 
+    async function fetchAddresses() {
+        try {
+            const res = await authorizedFetch('/api/addresses'); 
+            const addresses = await res.json();
+            const select = document.getElementById('addressSelect');
+            
+            select.innerHTML = ''; // "loading" 
+            
+            if (addresses.length === 0) {
+                select.innerHTML = '<option value="">No addresses found. Please add one.</option>';
+                toggleNewAddressForm(); //shows the form neat! 
+            } else {
+                addresses.forEach(addr => {
+                    select.innerHTML += `<option value="${addr.id}">${addr.rue}, ${addr.ville} ${addr.codePostal} (${addr.pays}) </option>`;
+                });
+            }
+        } catch (error) {
+            console.error("Error loading addresses", error);
+            //REPLACING WITH THE TOAST !! 
+        }
+    }
+
+    function toggleNewAddressForm() {
+        const form = document.getElementById('newAddressForm');
+        form.classList.toggle('d-none');
+        //.toggle what a method ! 
+    }
+
+    async function saveNewAddress() {
+        const rue = document.getElementById('newRue').value;
+        const ville = document.getElementById('newVille').value;
+        const codePostal = document.getElementById('newCodePostal').value;
+        const pays = document.getElementById('newPays').value.trim();
+
+        if(!rue || !ville || !codePostal) {
+            alert("Please fill all address fields.");
+            return; //REPLACING WITH TOAST! 
+        }
+
+        try {
+            const res = await authorizedFetch('/api/addresses', {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    rue: rue, 
+                    ville: ville, 
+                    codePostal: codePostal, 
+                    pays: pays,
+                    principal: false
+                })
+            });
+
+            if (res.ok) {
+                // Clear form, -> hide -> and reload dropdown RELOAD IT! 
+                document.getElementById('newRue').value = '';
+                document.getElementById('newVille').value = '';
+                document.getElementById('newCodePostal').value = '';
+                document.getElementById('newPays').value='';
+
+                toggleNewAddressForm();
+
+                await fetchAddresses(); 
+                
+            }
+        } catch (error) {
+            console.error("Failed to save address", error);
+            //REPLCING WITH TOAST! 
+        }
+    }
+
+    // cart summary diva
+    async function fetchCartSummary() {
+        try {
+            const res = await authorizedFetch('/api/cart');
+            const cart = await res.json();
+
+            // empty -> Cannot do checkout!! 
+
+            if(!cart.items || cart.items.length === 0) {
+                document.getElementById('placeOrderBtn').disabled = true;
+                document.getElementById('placeOrderBtn').innerText = "Cart is empty";
+                return;
+            }
+
+            const subtotal = cart.totalCartPrice || 0;
+            const discount = cart.discountAmount || 0;
+
+            const shipping = 7.0; // fixed 7 even in backend so.. idk
+            const total = subtotal - discount + shipping;
+
+            document.getElementById('checkoutSubtotal').innerText = `${subtotal.toFixed(2)} DT`;
+            document.getElementById('checkoutTotalTTC').innerText = `${total.toFixed(2)} DT`;
+
+            if (discount > 0) {
+                document.getElementById('checkoutDiscountRow').classList.remove('d-none');
+                document.getElementById('checkoutDiscount').innerText = `-${discount.toFixed(2)} DT`;
+            }
+
+        } catch (error) {
+            console.error("Error loading cart summary", error);
+            //REPLACING BY TOAST! 
+        }
+    }
+
+    // ORDER!  -> api/order to passer commande needs JUST addressId !!
+    async function placeOrder() {
+        const addressId = document.getElementById('addressSelect').value;
+
+        const payload={
+            addressId: parseInt(addressId)
+        };
+
+        const errorMsg = document.getElementById('orderErrorMsg');
+        const btn = document.getElementById('placeOrderBtn');
+
+        if (!addressId) {
+            errorMsg.innerText = "Please select a shipping address.";
+            errorMsg.classList.remove('d-none');
+            return;
+        }
+
+        errorMsg.classList.add('d-none');
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Processing...`;
+
+        try {
+            const res = await authorizedFetch('/api/orders', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                const orderData = await res.json();
+                
+                //window.location.href = `/payment?orderId=${orderData.id}`; 
+				
+				window.location.href = '/home';
+                //idk which page TODO
+				//MAYBE the user recap is beter..
+
+
+            } else {
+                const err = await res.json().catch(() => ({}));
+                errorMsg.innerText = err.message || "Failed to place order. Check stock.";
+                errorMsg.classList.remove('d-none');
+                btn.disabled = false;
+                btn.innerText = "Confirm & Place Order";
+            }
+        } catch (error) {
+            console.error(error);
+            errorMsg.innerText = "Network error. Please try again.";
+            errorMsg.classList.remove('d-none');
+            btn.disabled = false;
+            btn.innerText = "Confirm & Place Order";
+            //AGAIN THE TOAST
+        }
+    }
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+	</html>

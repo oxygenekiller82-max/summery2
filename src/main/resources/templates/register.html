@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="htpp://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Register Now</title>
+		<link rel="stylesheet" th:href="@{/css/register_css.css}">
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" th:href="@{/css/login_css.css}">
+	</head>
+	
+	<body>
+		<!--1-BURGER nav bar mobile -->
+			<nav class="navbar navbar-expand-lg tactile-navbar sticky-top">
+				<div class="container">
+					
+					<a class="navbar-brand fw-bold text-white" href="/">ShopFlow</a>
+					<button class="navbar-toggler border-0 shadow-none" type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#navbarNav">
+					  <span class="navbar-toggler-icon"></span>
+					</button>
+					
+					<div class="collapse navbar-collapse" id ="navbarNav">
+						<ul class="navbar-nav ms-auto text-center">
+							
+							<!--navbar optionsss idk-->
+							<li class="nav-item">
+								<a class="nav-link text-white-50" href="/">Shop</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-white-50" href="#">Cart</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-white fw-bold" href="/login">Login</a>
+							</li>
+						</ul>
+					</div>
+				</div>		
+			</nav>
+			
+			
+<div class="container mt-5">
+	<div class="row justify-content-center">
+			<div class="col-12 col-md-6 col-lg-5">
+				<div class="card tactile-card p-4 mt-5">
+					<h3 class="text-center fw-bold mb-4">Welcome back</h3>
+			
+					<!--form ofc for input-->
+					<form th:action="@{/register}" th:object="${user}" method="post">
+						
+						<div class="mb-3">
+						       <label class="form-label fw-semibold">First Name</label> 
+						       <input type="text" th:field="*{prenom}" class="form-control tactile-input" placeholder="First Name..." />
+						       <span class="error-msg" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></span>
+						</div>
+						
+						<div class="mb-3">
+							<label class="form-label fw-semibold">Last Name</label> 
+								<input type="text" th:field="*{nom}" class="form-control tactile-input" placeholder="Last Name..." />
+								<span class="error-msg" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+						</div>
+						
+						<div class="mb-3">
+								 <label class="form-label fw-semibold">Email</label> 
+						         <input type="email" th:field="*{email}" class="form-control tactile-input" placeholder="Email Address" />
+						         <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+						 </div>
+						 
+						 
+						 <div class="mb-3">
+							<label class="form-label fw-semibold">Password</label> 
+						          <input type="password" th:field="*{password}" class="form-control tactile-input" placeholder="Password" />
+						          <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+						 </div>
+						 
+						 <div class="mb-3">
+						     	<label class="form-label fw-semibold">Confirm Password</label> 
+								<input type="password" th:field="*{confirmPassword}" class="form-control tactile-input" id="confirmPassword" name="confirmPassword" placeholder="ConfirmPassword" />
+						         <span class="error-msg" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+						 </div>
+						 
+						 <button  type="submit" class="btn w-100 tactile-btn fw-bold py-2">Create Account</button>
+					</form>
+					
+					<p style="margin-top: 25px; font-size: 0.8rem; color: #7a7a7a;">
+					            already have an accounr? <a th:href="@{/login}" style="color: #6d5dfc; text-decoration: none; font-weight: bold;">Login here</a>
+					</p>
+					
+				</div>
+			</div>
+	</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+	
+
+</html>

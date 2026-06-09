@@ -1,0 +1,148 @@
+
+/*ooh what a way to decalre them !!*/
+:root{
+	--bg-indigo: rgb(157, 210, 208); /* teal ?*/
+	--card-lavender: #FDFCF0;
+	    --accent-coral: #EFA6AD;
+	    --text-navy: #1A1A1A;
+	    --white-highlight: rgba(255, 255, 255, 0.9);
+}
+
+body{
+	background: var(--bg-indigo) url("/img/motif.png") repeat fixed;
+	color: var(--text-navy);
+	font-family: 'Segoe UI',sans-serif;
+	
+	/*background-image: url("/src/main/resources/static/img/motif.png");
+	background-repeat: repeat;
+	background-attachment: fixed;*/
+}
+
+.row-stretch{
+	min-height: 85vh;
+}
+
+.catalog-row{
+	min-height: 85vh;
+}
+
+ /* ooh inheritance*/ 
+ 
+.catalog-row > aside, 
+.catalog-row > main {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/*1-navbar*/ 
+
+.tactile-navbar{
+	background-color: rgba(157, 210, 208, 0.8);
+	border-bottom: 1.5px solid var(--white-highlight);
+	padding-top: 1rem;
+	backdrop-filter: blur(10px);
+}
+
+
+
+.nav-link:hover{
+	color:var(--accent-coral) !important;
+	transition: color 0.4s ease;
+}
+
+/**CARDS **/
+.tactile-card{
+	background-color: var(--card-lavender);
+	border:none;
+	border-radius: 16px;
+	
+	box-shadow: 
+	/*-> TOP LEFT CORNER = white highlight + shadow under it !!*/
+		inset 2px 2px 4px var(--white-highlight),
+		8px 12px 24px rgba(22,29,76,0.4);
+	
+}
+
+/*form inputs */
+
+.tactile-input{
+	background-color: #E2E5F2;
+	border: none;
+	border-radius: 10px;
+	color: var(--text-navy);
+	
+	/*BOX SHADOW -> make the input look CARVEDDD into the card!!!*/
+	box-shadow: inset 3px 3px6pxrgba(22,29,76,0.1),
+				inset -2px -2px 4px var(--white-highlight);
+	padding: 0.75rem 1rem;
+}
+
+/*Error message in login*/
+#errorMessage {
+    background-color: rgba(239, 166, 173, 0.2); 
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    
+}
+
+/*button design "dreamcore" ? */ 
+.tactile-btn {
+	background-color: var(--accent-coral);
+	color: white;
+	order: none;
+	border-radius: 12px;
+	
+	box-shadow: 2px 4px 8px rgba(239, 166, 173, 0.4), 
+	      inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+		  
+	transition: all 0.8s ease;
+}
+
+.tactile-btn:hover {
+    background-color: #f1b3b9;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.tactile-btn:active {
+   /*go down a bit ?*/
+    /*ehh maybe WRITE LOG IN INSIDE OF IT ??? chaarcter by character!!*/
+}
+
+
+/*links in navbar*/
+
+.accent-link{
+	color:var(--bg-indigo);
+	text-decoration: none;
+}
+
+.accent-link:hover {
+    color: var(--accent-coral);
+    text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
