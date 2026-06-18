@@ -77,6 +77,8 @@ public class AuthenticationController {
 	        return ResponseEntity.badRequest().body("You already have a seller profile!");
 	    }
 		
+		//response -> bad request -> body .. my Gosh spring..
+		
 		 user.setRole(UserRole.SELLER);
 		 userRepo.save(user);
 		    

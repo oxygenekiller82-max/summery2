@@ -78,6 +78,8 @@ public class SecurityConfiguration {
 				.requestMatchers("/api/dashboard/admin").permitAll()
 				//(e.g., /swagger-ui/**, /v3/api-docs/**)
 				
+
+				
 				.requestMatchers("/swagger-ui/**").permitAll()
 				.requestMatchers("/swagger-ui.html").permitAll()
 				.requestMatchers("/v3/api-docs/**").permitAll()

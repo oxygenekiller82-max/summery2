@@ -54,7 +54,7 @@ public class DataIntializer implements CommandLineRunner {
                     .prenom("spring")
                     .nom("spring")
                     .email("spring@test.com")
-                    .motDePasse(passwordEncoder.encode("123456"))
+                    .motDePasse(passwordEncoder.encode("1"))
                     .role(UserRole.SELLER) 
                     .actif(true)
                     .build();
@@ -65,8 +65,8 @@ public class DataIntializer implements CommandLineRunner {
 			//creating , seller profile ! !!  (=boutique)
 			
 			Seller testSeller = Seller.builder()
-                    .nomBoutique("Techy Store")
-                    .description("BEST STORE 67")
+                    .nomBoutique("aespa official store trust")
+                    .description("I GOT NO ETA TA TA!")
                     .user(savedUser)
                     .build();
 			
@@ -75,10 +75,10 @@ public class DataIntializer implements CommandLineRunner {
 		}
 		
 		//dummy category 
-		if (categoryRepo.count() == 0) {
+		if (categoryRepo.count() ==0) {
 		    categoryRepo.save(Category.builder()
-		            .nom("Electronics")
-		            .description("power")
+		            .nom("Cold")
+		            .description("don't sue me for brain freeze mfs")
 		            .build());
 		}
 		
@@ -118,24 +118,38 @@ public class DataIntializer implements CommandLineRunner {
 		    
 		
 		//un produit 
-		 Category electronics = categoryRepo.findAll().get(0);
+		 Category cold = categoryRepo.findAll().get(0);
 		 Seller store = sellerRepo.findAll().get(0);
 		    
 		 //product -> LIST of actegories: 
 		 List<Category> productCategories = new ArrayList<>();
-		 productCategories.add(electronics);
+		 productCategories.add(cold);
 		 
 		 Product phone = Product.builder()
-		            .nom("Galaxy S25")
-		            .prix(1200.0)
+		            .nom("aespa Lemonade tang")
+		            .prix(20.0)
 		            .categories(productCategories)
 		            .seller(store)
 		            .actif(true)
 		            .stock(10)
-		            .description("Whatever phone")
-		            .images(List.of("https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s25-sm-s931.jpg"))
+		            .description("Lemonade special!")
+		            .images(List.of("https://images.unsplash.com/photo-1623084921164-4a8c5c37a912?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"))
 		            .build();
+		 
+		 Product phone1 = Product.builder()
+		            .nom("aespa Lemonade tang Extra ice")
+		            .prix(25.0)
+		            .categories(productCategories)
+		            .seller(store)
+		            .actif(true)
+		            .stock(10)
+		            .description("Lemonade special!")
+		            .images(List.of("https://images.unsplash.com/photo-1623084921164-4a8c5c37a912?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"))
+		            .build();
+		 productRepo.save(phone1);
+		 
 		 productRepo.save(phone);
+		 
 		 
 		 //order item PAID for this customer for test 
 		 Order order = Order.builder()
